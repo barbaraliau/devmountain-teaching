@@ -8,28 +8,49 @@ var MoviesController = require('./controllers/movies_controller');
 var app = express();
 var port = 9090;
 
+function authorized(req, res, next) {
+  console.log('Authorized');
+  next();
+}
+
+function logDate(req, res, next) {
+  console.log(new Date());
+  next()
+}
+
+function isAdmin(req, res, next) {
+  if (req.body.user === 'admin') {
+    console.log('user is admin')
+    next()
+  } else {
+    console.log('user is not admin')
+    return res.status(403).send('Forbidden - no entry');
+  }
+}
+
 // MIDDLEWARE - app.use()
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(logDate);
+// app.use(isAdmin);
 
-// PASSING IN DATA
-// pass in data with a get
+app.post('/hai', function(req, res) {
+  res.status(400).send(req.body);
+})
 
-// Path Params --> req.params
-
-// URL Queries --> req.query
-
-// get the movie --> req.params
-app.get('/movies/:title', function(req, res, next) {
-  console.log('params', req.params)
-  var movieTitle = req.params.title;
-
-  for (var i = 0; i < movies.length; i++) {
-    if (movies[i].title === movieTitle) {
-      return res.status(200).send(movies[i]);
-    }
-  }
+app.get('/hai', function(req, res) {
+  res.status(200).send('hai');
 });
+
+// This will never get called because the function above it
+// gets called and the request/response ends
+app.get('/hai', function(req, res) {
+  res.status(200).send('fajklasdflkfdjsklafsd;l');
+})
+
+app.use(isAdmin);
+// get the movie --> req.params
+app.get('/movies/:title', MoviesController.getOne);
 
 // post movie --> req.body
 app.post('/movies', MoviesController.create);
@@ -38,30 +59,7 @@ app.post('/movies', MoviesController.create);
 app.get('/movies', MoviesController.read);
 
 // req.params
-app.delete('/movies/:title', function(req, res) {
-  var movieToDelete = req.params.title;
-  console.log('title', movieToDelete)
-
-  // var newMovies = movies.map(function(movie) {
-  //   if (movie.title !== movieToDelete) {
-  //     return movie;
-  //   }
-  //   return
-  // });
-
-  // movies = newMovies;
-  for (var i = 0; i < movies.length; i++) {
-    if (movies[i].title === movieToDelete) {
-      movies.splice(i, 1);
-    }
-  }
-
-  res.status(200).send(movies);
-});
-
-app.get('/books', function(req, res) {
-  console.log('queries', req.query)
-})
+app.delete('/movies/:title', MoviesController.delete);
 
 app.listen(port, function() {
   console.log('Listening on port', port);
