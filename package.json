@@ -1,20 +1,24 @@
 {
-  "name": "express-app",
+  "name": "webdm19",
   "version": "1.0.0",
-  "description": "Express application",
+  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [
-    "express",
-    "nodejs",
-    "example"
-  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/barbaraliau/devmountain-teaching.git"
+  },
   "author": "",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/barbaraliau/devmountain-teaching/issues"
+  },
+  "homepage": "https://github.com/barbaraliau/devmountain-teaching#readme",
   "dependencies": {
     "body-parser": "^1.16.1",
-    "express": "^4.14.1"
+    "express": "^4.14.1",
+    "express-session": "^1.15.1"
   }
 }

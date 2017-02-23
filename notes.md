@@ -139,3 +139,100 @@ app.post('/books', function(req, res) {
 
 })
 ```
+
+Day 2 Review
+REST
+
+Parsing Data
+req.body --> POST/PUT
+req.params (PATH PARAMS)
+  - userId, username
+  - part of the URL /
+  - :id
+req.query (URL QUERIES)
+  - searching lots of stuff
+  - ?KEY=VALUE&KEY1=VALUE
+req.query.key.something
+
+module.exports = {
+  create: function() {
+
+
+
+  },
+}
+
+function thisFuncIsOnlyUsedHere() {
+
+}
+
+var assignToVariable = require('.//path/to/file.js')
+
+How Express calls things
+- in the order they are written
+- like CSS
+- moves on to the next function because the previous
+  func called next()
+
+
+Middleware
+- functions that you want to run on every request
+  that follows the middleware
+
+
+app.use() --> multiple endpoints
+
+app.get('/', middleWareHereOnlyOnce, function(req, res) {
+
+})
+
+
+# 20170223 - Day 3 Node
+
+### Review (How to make Express Server)
+1. Generate package.json `npm init`
+2. Install and save modules that we want to use
+  - `npm install --save express body-parser express-session`
+3. Create our server file:
+  - `touch index.js`
+4. (In index.js)
+  - Require modules
+  - Use modules
+  - Listen on a port
+  - Add server specific logic like *middleware*, *endpoints*, *session*, *static assets*
+
+### express.static(__dirname + 'folderName')
+Serves up our front end / client code on the same domain as our server
+Everything that we serve here is public
+- Common names for this folder are *public*, *static*, *assets*
+
+### CORS
+Cross Origin Resource Sharing
+By default, different domains cannot make requests of each other
+This must be enabled
+
+### Sessions
+To track and record user state across different requests
+- So you can identify who has made what request
+- To improve user experience on your application
+- User authentication
+- Anything where you want to track user state
+
+### express-session
+`npm install --save express-session`
+
+```
+app.use(session({
+  secret: config.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: true
+}))
+
+// if you have HTTPS set up, you should set cookie: { secure : true }
+// if you do this with HTTP, the cookie will not be sent back and
+// you won't be able to save user state
+```
+
+Session information is available on `req.session`
+
+

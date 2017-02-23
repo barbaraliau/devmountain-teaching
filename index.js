@@ -1,66 +1,53 @@
-// external dependencies
+// REQUIRE MODULES
 var express = require('express');
 var bodyParser = require('body-parser');
-var movies = require('./models/movies');
-var MoviesController = require('./controllers/movies_controller');
+var session = require('express-session');
+// Adding the .js extension is optional
+var FoodController = require('./controllers/food_controller.js');
 
-// app specific variables
+// require our config variables
+var config = require('./config');
+
+// INITIALIZE EXPRESS
 var app = express();
-var port = 9090;
+// DECLARE PORT
+var port = 9091;
 
-function authorized(req, res, next) {
-  console.log('Authorized');
-  next();
-}
-
-function logDate(req, res, next) {
-  console.log(new Date());
-  next()
-}
-
-function isAdmin(req, res, next) {
-  if (req.body.user === 'admin') {
-    console.log('user is admin')
-    next()
-  } else {
-    console.log('user is not admin')
-    return res.status(403).send('Forbidden - no entry');
-  }
-}
-
-// MIDDLEWARE - app.use()
+// MIDDLEWARE
+// REGULAR USERS vs ADMIN USERS
+app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(logDate);
-// app.use(isAdmin);
+app.use(session({
+  secret: config.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: true
+}));
 
-app.post('/hai', function(req, res) {
-  res.status(400).send(req.body);
-})
-
-app.get('/hai', function(req, res) {
-  res.status(200).send('hai');
+// ENDPOINTS
+// app.get('/foods', FoodController.getAll);
+app.get('/1', function(req, res) {
+  console.log('got request --> session', req.session.id);
+  res.status(200).send(req.session.id)
 });
 
-// This will never get called because the function above it
-// gets called and the request/response ends
-app.get('/hai', function(req, res) {
-  res.status(200).send('fajklasdflkfdjsklafsd;l');
+app.get('/2', function(req, res) {
+  console.log('got request --> session', req.session.id);
+  res.status(200).send(req.session.id)
 })
 
-app.use(isAdmin);
-// get the movie --> req.params
-app.get('/movies/:title', MoviesController.getOne);
+app.get('/3', function(req, res) {
+  console.log('got request --> session', req.session.id);
+  res.status(200).send(req.session.id)
+})
 
-// post movie --> req.body
-app.post('/movies', MoviesController.create);
+// note: This will not work without bodyParser middleware
+app.post('/', function(req, res) {
+  console.log('body', req.body);
+});
 
-// search/get movie --> req.query
-app.get('/movies', MoviesController.read);
 
-// req.params
-app.delete('/movies/:title', MoviesController.delete);
-
+// LISTEN
 app.listen(port, function() {
   console.log('Listening on port', port);
 });
